@@ -317,6 +317,39 @@ class Fun(commands.Cog):
                      "If you didn't get this message, call me", "I always lie"]
         paradox = random.choice(paradoxes)
         await ctx.send(paradox)
+        
+    @commands.command(help="Play rock paper scissors")
+    async def rps(self, ctx, action):
+        possible = ["r", "p", "s"]
+        comp = random.choice(possible)
+
+        if action == comp:
+            await ctx.send(f"I chose ({comp})")
+            await ctx.send("Tie")
+        elif action == "r":
+            if comp == "s":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You win")
+            if comp == "p":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You lose")
+        elif action == "p":
+            if comp == "r":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You win")
+            if comp == "s":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You lose")
+        elif action == "s":
+            if comp == "p":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You win")
+            if comp == "r":
+                await ctx.send(f"I chose ({comp})")
+                await ctx.send("You lose")
+        else:
+            await ctx.send("Invalid choice")
+
 
 client.add_cog(Fun(client))
 
