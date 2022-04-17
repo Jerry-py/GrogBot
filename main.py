@@ -129,7 +129,7 @@ class Mod(commands.Cog):
     @commands.command(help="Warn members")
     @commands.has_permissions(kick_members=True, ban_members=True)
     async def warn(self, ctx, member: discord.Member=None, *, reason="No reason"):
-        if member == None:
+        if member is None:
             await ctx.send("The provided member couldn't be found or you forget to provide one")
         try:
             first_warning = False
@@ -153,7 +153,11 @@ class Mod(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason="No reason"):
         await ctx.send(
-            member.name + "#" + member.discriminator + " has been kicked from The Grog's Lounge\nReason: " + reason)
+            f"{member.name}#{member.discriminator}"
+            + " has been kicked from The Grog's Lounge\nReason: "
+            + reason
+        )
+
         await member.kick(reason=reason)
 
     @kick.error
@@ -165,7 +169,11 @@ class Mod(commands.Cog):
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason="No reason"):
         await ctx.send(
-            member.name + "#" + member.discriminator + " has been banned from The Grog's Lounge\nReason: " + reason)
+            f"{member.name}#{member.discriminator}"
+            + " has been banned from The Grog's Lounge\nReason: "
+            + reason
+        )
+
         await member.ban(reason=reason)
 
     @ban.error
@@ -184,7 +192,7 @@ class Mod(commands.Cog):
                 await ctx.guild.unban(user)
                 await ctx.send(f'Unbanned {user.mention}')
                 return
-            await ctx.send(member + " was not found")
+            await ctx.send(f"{member} was not found")
 
     @unban.error
     async def unban_error(self, ctx, error):
@@ -267,7 +275,7 @@ class Fun(commands.Cog):
 
     @commands.command(help="The bot will rate how cool you are")
     async def howcool(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         embed = discord.Embed(title=f'How cool is {member.name}#{member.discriminator}?',
                               description=f"{member.mention} is {random.randrange(101)}% cool :sunglasses:",
@@ -276,7 +284,7 @@ class Fun(commands.Cog):
 
     @commands.command(help="The bot will rate how gay you are")
     async def howgay(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         embed = discord.Embed(title=f'How gay is {member.name}#{member.discriminator}?',
                               description=f"{member.mention} is {random.randrange(101)}% gay :rainbow_flag:",
@@ -285,7 +293,7 @@ class Fun(commands.Cog):
 
     @commands.command(help="The bot knows your pp size :flushed:")
     async def pp(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         embed = discord.Embed(title=f"How long is {member.name}#{member.discriminator}'s pp?",
                               description=f"{member.mention}'s pp is {random.randrange(20)}cm :flushed:",
@@ -295,7 +303,7 @@ class Fun(commands.Cog):
     @commands.command(help="Kill someone")
     async def kill(self, ctx, member:discord.Member = None):
         author = ctx.author
-        if member == None:
+        if member is None:
             await ctx.send(f'{author.name} killed themselves')
         embed = discord.Embed(title='', description=f"{author.mention} kills {member.mention}",
                               colour=0xb27b56)
@@ -304,7 +312,7 @@ class Fun(commands.Cog):
     @commands.command(help="Kiss someone")
     async def kiss(self, ctx, member:discord.Member = None):
         author = ctx.author
-        if member == None:
+        if member is None:
             await ctx.send(f'{author.name} kissed themselves')
         embed = discord.Embed(title='', description=f"{author.mention} kisses {member.mention}",
                               colour=0xb27b56)
@@ -404,7 +412,7 @@ class Image(commands.Cog):
 
     @commands.command(help="Get user's avatars")
     async def avatar(self, ctx, member: discord.Member = None):
-        if member == None:
+        if member is None:
             member = ctx.author
         member_avatar = member.avatar_url
         embed = discord.Embed(title=f"{member.name}#{member.discriminator}'s avatar", colour=0xb27b56)
@@ -448,7 +456,7 @@ class Misc(commands.Cog):
 
     @commands.command()
     async def whois(self, ctx, member: discord.Member=None):
-        if member == None:
+        if member is None:
             await ctx.send("Member not found")
         embed = discord.Embed(colour=0xb27b56)
         embed.set_author(name=f"User Info - {member}"),
