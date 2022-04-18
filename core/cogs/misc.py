@@ -2,6 +2,7 @@ import discord
 import random
 import requests
 from discord.ext import commands
+from typing import Optional
 
 class Misc(commands.Cog):
     def __init__(self, client):

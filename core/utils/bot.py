@@ -16,11 +16,11 @@ class Grogbotdotpy(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix=commands.when_mentioned_or('g/'),
-            help_command=MyNewHelp,
             intents=discord.Intents.all()
         )
+        self.help_command = MyNewHelp()
         self.warnings = {}
-        self.key = ""
+        self.key = "OTY1NzM0MjYyOTcwMTM0NTQ4.Yl3gHg.0_7WZzoHjMPQHEOtk6alq4cQavI"
 
     async def on_ready(self):
         await self.change_presence(status=discord.Status.online, activity=discord.Game("Luz's Pet, My prefix is !g"))

@@ -2,7 +2,7 @@ import contextlib
 import discord
 from discord.ext import commands
 
-class Chatbot(commands.Bot):
+class Chatbot(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.auto_responses = {
@@ -19,8 +19,8 @@ class Chatbot(commands.Bot):
             "haram": "https://tenor.com/view/haram-heisenberg-gif-20680378"
         }
 
-    @commands.listen('on_message')
-    async def autorespond(self, message):
+    @commands.Cog.listener()
+    async def on_message(self, message):
         user_message = str(message.content)
         if message.author == self.client.user:
             return
