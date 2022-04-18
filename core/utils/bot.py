@@ -20,7 +20,7 @@ class Grogbotdotpy(commands.Bot):
         )
         self.help_command = MyNewHelp()
         self.warnings = {}
-        self.key = "OTY1NzM0MjYyOTcwMTM0NTQ4.Yl3gHg.0_7WZzoHjMPQHEOtk6alq4cQavI"
+        self.key = "token"
 
     async def on_ready(self):
         await self.change_presence(status=discord.Status.online, activity=discord.Game("Luz's Pet, My prefix is !g"))
