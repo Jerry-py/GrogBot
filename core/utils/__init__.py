@@ -1,2 +1,2 @@
-from bot import *
-from helpcommand import *
+from .bot import *
+from .helpcommand import *
