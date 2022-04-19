@@ -111,5 +111,5 @@ class Mod(commands.Cog):
         if isinstance(error, MissingPermissions):
             await ctx.send("You don't have permission to unban members.")
 
-def setup(client):
-    client.add_cog(Mod(client))
+async def setup(client):
+    await client.add_cog(Mod(client))

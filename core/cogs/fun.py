@@ -120,5 +120,5 @@ class Fun(commands.Cog):
         else:
             await ctx.send("Invalid choice")
 
-def setup(client):
-    client.add_cog(Fun(client))
+async def setup(client):
+    await client.add_cog(Fun(client))

@@ -35,5 +35,5 @@ class Chatbot(commands.Cog):
                             colour=0xb27b56)
         await ctx.send(embed=mbed)
 
-def setup(client):
-    client.add_cog(Chatbot(client))
+async def setup(client):
+    await client.add_cog(Chatbot(client))

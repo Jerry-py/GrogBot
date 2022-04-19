@@ -90,5 +90,5 @@ class Misc(commands.Cog):
         mbed.add_field(name="Does Luziaf#0001 have any socials?", value=abtme3, inline=False)
         await ctx.send(embed=mbed)
 
-def setup(client):
-    client.add_cog(Misc(client))
+async def setup(client):
+    await client.add_cog(Misc(client))

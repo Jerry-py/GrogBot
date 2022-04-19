@@ -1,3 +1,4 @@
+import asyncio
 import aiofiles
 import discord
 from .helpcommand import MyNewHelp
@@ -46,14 +47,14 @@ class Grogbotdotpy(commands.Bot):
     async def on_guild_join(self, guild):
         self.warnings[guild.id] = {}
 
-    def load_cogs(self):
+    async def load_cogs(self):
         for extension in initial_extension:
             try:
-                self.load_extension(extension)
+                await self.load_extension(extension)
             except Exception as e:
                 print(f"Could not load extension: {extension}.\n\nError: {e}")
 
     def run(self):
-        self.load_cogs()
+        asyncio.run(self.load_cogs())
 
         super().run(self.key, reconnect=True)

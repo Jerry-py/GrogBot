@@ -71,5 +71,5 @@ class Image(commands.Cog):
         embed.add_field(name="Skin", value=f'https://crafatar.com/skins/{uuid}', inline=False)
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Image(client))
+async def setup(client):
+    await client.add_cog(Image(client))
