@@ -1,5 +1,8 @@
+import asyncio
 import discord
+import os
 import random
+import urllib.request
 from discord.ext import commands
 from typing import Optional
 
@@ -119,6 +122,27 @@ class Fun(commands.Cog):
                 await ctx.send("You lose")
         else:
             await ctx.send("Invalid choice")
+
+    @commands.command(name='ttsobama')
+    async def _ttsobama(self, ctx, *, text: str = None):
+        if text is None:
+            return await ctx.send("You need to enter text!")
+
+        if len(text) > 280:
+            return await ctx.send("Text is too long!")
+        await ctx.send('Your video is loading... Might take up to 5-12 seconds', delete_after=12)
+
+        response = self.session.post(url='http://talkobamato.me/synthesize.py', data={
+            "input_text": text
+        })
+        await asyncio.sleep(12)
+        url = response.url.replace('http://talkobamato.me/synthesize.py?speech_key=', '')
+        url = f'http://talkobamato.me/synth/output/{url}/obama.mp4'
+        await asyncio.sleep(1)
+        urllib.request.urlretrieve(url, 'obama.mp4')
+        file = discord.File('obama.mp4')
+        await ctx.send(file=file)
+        os.remove('obama.mp4')
 
 async def setup(client):
     await client.add_cog(Fun(client))
