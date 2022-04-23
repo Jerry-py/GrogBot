@@ -1,0 +1,145 @@
+import discord, random, requests
+from discord.ext import commands
+from typing import Optional
+from mojang import MojangAPI
+
+class Misc(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+
+    @commands.command(help="Defines a word") # Thanks for midnightFirefly#9122 to help me getting the definition from JSON
+    async def define(self, ctx, word):
+        response = requests.get(f'https://api.dictionaryapi.dev/api/v2/entries/en_US/{word}')
+        if response.status_code == 404:
+            await ctx.send("Word not found")
+            return
+        else:
+            definedata = response.json()
+            definition = definedata[0]["meanings"][0]["definitions"][0]["definition"]
+            deffinal = discord.Embed(title=f"Define {word}",
+                                     description=f"{definition}",
+                                     colour=0xb27b56)
+            await ctx.send(embed=deffinal)
+
+    @commands.command(help="Check bot latency")
+    async def ping(self, ctx):
+        await ctx.send("Pong! {0}".format(round(self.client.latency, 1)))
+
+    @commands.command()
+    async def whois(self, ctx, member: Optional[discord.Member]):
+        if member is None:
+            await ctx.send("Member not found")
+        embed = discord.Embed(colour=0xb27b56)
+        embed.set_author(name=f"User Info - {member}")
+        embed.set_thumbnail(url=member.avatar.url)
+        embed.set_footer(text=f"Requested by - {ctx.author}", icon_url=ctx.author.avatar.url)
+        embed.add_field(name='ID', value=member.id, inline=False)
+        embed.add_field(name='Name', value=member.display_name, inline=False)
+        embed.add_field(name='Created at', value=member.created_at, inline=False)
+        embed.add_field(name="Joined at", value=member.joined_at, inline=False)
+        await ctx.send(embed=embed)
+
+    @commands.command(help="Get random quotes")
+    async def quote(self, ctx):
+        result = requests.get('https://type.fit/api/quotes').json()
+        num = random.randint(1, 1500)
+        content = result[num]['text']
+        author = result[num]['author']
+        embed = discord.Embed(title="Quote", description=f"{content} -{author}", colour=0xb27b56)
+        await ctx.send(embed=embed)
+
+    @commands.command(help="Get random Number facts")
+    async def numfact(self, ctx):
+        url = "https://numbersapi.p.rapidapi.com/random/trivia"
+        querystring = {"fragment": "true", "json": "true"}
+        headers = {
+            "X-RapidAPI-Host": "numbersapi.p.rapidapi.com",
+            "X-RapidAPI-Key": "e8eb808b04mshff94960736af634p166917jsn4bf34ac495ac"
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        fact = response.json()
+        fact1 = fact['text']
+        fact2 = fact['number']
+        embed = discord.Embed(title="Number facts", description=f"{fact2} : {fact1}",
+                              colour=0xb27b56)
+        await ctx.send(embed=embed)
+
+    @commands.command(help="Don't.")
+    async def lightmode(self,ctx):
+        embed = discord.Embed(title="FLASHBANG!", description="This is how my maker sees Discord", colour=0xffffff)
+        embed.set_image(url="https://cdn.discordapp.com/attachments/943351762759327839/965143063154524210/general_-_Discord_17_04_2022_13_53_42.png")
+        await ctx.send(embed=embed)
+    
+    @commands.command(help="About the bot")
+    async def aboutme(self, ctx):
+        abtme1 = "I'm GrogBot, the bot made by Luziaf#0001 and I'm made for The Grog's Lounge Discord server. I'm still in Beta state so my features will be added or removed."
+        abtme21 = "Luziaf#0001 is an Indonesian Modpack Developer known for making Draconic Infinity Series.\nI'm gonna say this, don't tell Luzzy, He's a light mode enjoyer."
+        abtme22 = "If you're curious about how my maker sees Discord, execute the command `g/lightmode`."
+        abtme3 = "Check his twitter and instagram NLuziaf by clicking one of these links:\nInstagram: https://www.instagram.com/nluziaf/\nTwitter: https://twitter.com/NLuziaf"
+
+        mbed = discord.Embed(title="Hello, I'm GrogBot. Nice to meet you!", colour=0xb27b56)
+        mbed.set_footer(text="Made in Riau, Indonesia by Luziaf#0001 :luz_smug:",
+                        icon_url="https://cdn.discordapp.com/attachments/943351762759327839/965177093086396457/IMG_9096.png")
+        mbed.add_field(name="Who am I?", value=abtme1, inline=False)
+        mbed.add_field(name="Who is Luziaf#0001?", value=f"{abtme21} {abtme22}", inline=False)
+        mbed.add_field(name="Does Luziaf#0001 have any socials?", value=abtme3, inline=False)
+
+        embed = discord.Embed(colour=0xb27b56)
+        embed.set_image(url='https://cdn.discordapp.com/attachments/943351762759327839/965560832471736352/2022-04-18_17.16.12.png')
+
+        await ctx.send(embed=embed)
+        await ctx.send(embed=mbed)
+
+    @commands.command(help="Get Minecraft server status")
+    async def mcserv(self, ctx, server_address: str):
+        server_data = requests.get(f'https://api.mcsrvstat.us/2/{server_address}')
+        if server_data.status_code == 404:
+            await ctx.send("Server not found")
+        else:
+            data = server_data.json()
+            online: bool = data['debug']['ping']
+            ip = data['ip']
+            port = data['port']
+            version: int = data['version']
+            embed = discord.Embed(colour=0xb27b56)
+            embed.set_author(name=f"Data for {server_address}")
+            embed.set_thumbnail(url=f'https://api.mcsrvstat.us/icon/{server_address}')
+            embed.add_field(name="IP", value=ip, inline=False)
+            embed.add_field(name="Port", value=port, inline=False)
+            embed.add_field(name="Online?", value=online, inline=False)
+            embed.add_field(name="Version", value=version, inline=False)
+
+            if online:
+                motd: str = data['motd']['clean'][0].strip()
+                online_players: int = data['players']['online']
+                max_player: int = data['players']['max']
+                embed.add_field(name="MOTD", value=motd, inline=False)
+                embed.add_field(name="Online players", value=f"{online_players}/{max_player}", inline=False)
+
+            await ctx.send(embed=embed)
+
+    @commands.command(help="Get Minecraft player data")
+    async def mcplayer(self, ctx, player: str):
+        uuid = MojangAPI.get_uuid(player)
+        command13 = f"`/give @p minecraft:player_head{{SkullOwner: \"{player}\"}}`"
+        command12 = f"`/give @p minecraft:skull 1 3 {{SkullOwner: \"{player}\"}}`"
+
+        embed = discord.Embed(colour=0xb27b56)
+        embed.set_author(name=f"Player Data - {player}")
+        embed.set_thumbnail(url=f'https://crafatar.com/renders/head/{uuid}?overlay')
+        embed.add_field(name="UUID", value=uuid, inline=False)
+        embed.add_field(name="Skin", value=f'https://crafatar.com/skins/{uuid}', inline=False)
+        embed.add_field(name="Give head command",
+                        value=f'**1.13 or later :**\n{command13}\n**1.12 or earlier :**\n{command12}',
+                        inline=False)
+        embed.set_image(url=f'https://crafatar.com/renders/body/{uuid}?overlay')
+        await ctx.send(embed=embed)
+
+    @commands.command(help="Reload command", aliases=["r"])
+    @commands.has_permissions(administrator=True)
+    async def reload(self, ctx, cog_name):
+        self.client.reload_extension(f'core.cogs.{cog_name}')
+        return await ctx.send(f"Reloaded Cog: {cog_name}")
+
+async def setup(client):
+    await client.add_cog(Misc(client))
